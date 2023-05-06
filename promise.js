@@ -1,6 +1,6 @@
 const blogs =[];
 
-function create1stBlog() {
+function createBlog() {
     return new Promise( (resolve, reject) => {
         setTimeout( () => {
             blogs.push({title: 'BLOG1'});
@@ -40,32 +40,38 @@ function updateLastUserActivityTime(){
     })
 }
 //console.log(`Before creation`)
+
 updateLastUserActivityTime().then((msg)=>{
     console.log(`Before creation ${msg}`);
 });
+
 // create1stBlog().then(()=>{ 
 //     updateLastUserActivityTime().then((msg)=>{
 //         console.log(`after creation ${msg}`);
 //     })
 // })
 
-const p1=create1stBlog();
+const p1=createBlog();
 const p2=updateLastUserActivityTime();
-Promise.all([p1, p2]).then(()=>{
-    return new Promise((resolve, reject)=>{
+
+async function fun1(){
+await Promise.all([p1, p2])
+    let res = new Promise((resolve, reject)=>{
         blogs.forEach((index)=>{
             console.log(`After Creation ${index.title}`);
-            updateLastUserActivityTime().then((msg)=>{
+            updateLastUserActivityTime().then(msg=>{
                 console.log(msg);
-            });
+            })
         })
         resolve();    
     })
-}).then(()=>{
-    deleteBlog().then((msg=>{
-        console.log(msg.title);
-    }))
-})
+    await res;
+
+    let del = await deleteBlog()
+        console.log(`${del.title} deleted`);
+    
+}
+fun1();
 
 // create1stBlog().then(()=>{
 //     create2ndBlog().then(()=>{
